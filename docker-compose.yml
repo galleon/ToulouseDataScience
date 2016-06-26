@@ -1,0 +1,16 @@
+zeppelin:
+  image: dylanmei/zeppelin
+  environment:
+    ZEPPELIN_PORT: 8080
+    ZEPPELIN_JAVA_OPTS: >-
+      -Dspark.driver.memory=1g
+      -Dspark.executor.memory=2g
+    ZEPPELIN_NOTEBOOK_STORAGE: org.apache.zeppelin.notebook.repo.VFSNotebookRepo, org.apache.zeppelin.notebook.repo.zeppelinhub.ZeppelinHubRepo
+    ZEPPELINHUB_API_ADDRESS: https://www.zeppelinhub.com
+    ZEPPELINHUB_API_TOKEN: d4b998ff-10dd-4deb-85d0-859d24655844
+    MASTER: local[*]
+  ports:
+    - 8080:8080
+  volumes:
+    - ./data:/usr/zeppelin/data
+    - ./notebooks:/usr/zeppelin/notebook
