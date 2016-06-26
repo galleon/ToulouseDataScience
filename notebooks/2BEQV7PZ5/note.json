@@ -72,7 +72,7 @@
     {
       "title": "Let\u0027s import what is needed to solve our problem",
       "text": "%spark\nimport scala.util.Try\n\nimport org.apache.spark._\nimport org.apache.spark.rdd.RDD\nimport org.apache.spark.mllib.regression.LabeledPoint\nimport org.apache.spark.mllib.linalg.Vectors\nimport org.apache.spark.mllib.tree.DecisionTree\nimport org.apache.spark.mllib.tree.model.DecisionTreeModel\nimport org.apache.spark.mllib.util.MLUtils\n",
-      "dateUpdated": "Jun 25, 2016 8:29:47 PM",
+      "dateUpdated": "Jun 26, 2016 10:29:15 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -102,15 +102,15 @@
         "msg": "import scala.util.Try\nimport org.apache.spark._\nimport org.apache.spark.rdd.RDD\nimport org.apache.spark.mllib.regression.LabeledPoint\nimport org.apache.spark.mllib.linalg.Vectors\nimport org.apache.spark.mllib.tree.DecisionTree\nimport org.apache.spark.mllib.tree.model.DecisionTreeModel\nimport org.apache.spark.mllib.util.MLUtils\n"
       },
       "dateCreated": "Jun 25, 2016 7:16:35 AM",
-      "dateStarted": "Jun 25, 2016 8:18:08 AM",
-      "dateFinished": "Jun 25, 2016 8:18:11 AM",
+      "dateStarted": "Jun 26, 2016 10:29:15 PM",
+      "dateFinished": "Jun 26, 2016 10:29:18 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Define the Flight class",
       "text": "// define the Flight Schema\ncase class Flight(dofM: String, dofW: String, carrier: String, tailnum: String, flnum: Int, org_id: String,\n                      origin: String, dest_id: String, dest: String, crsdeptime: Double, deptime: Double, depdelaymins: Double,\n                      crsarrtime: Double, arrtime: Double, arrdelay: Double, crselapsedtime: Double, dist: Int)",
-      "dateUpdated": "Jun 25, 2016 8:44:02 PM",
+      "dateUpdated": "Jun 26, 2016 10:28:12 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -140,14 +140,14 @@
         "msg": "defined class Flight\n"
       },
       "dateCreated": "Jun 25, 2016 8:05:05 AM",
-      "dateStarted": "Jun 25, 2016 8:06:23 AM",
-      "dateFinished": "Jun 25, 2016 8:06:25 AM",
+      "dateStarted": "Jun 26, 2016 10:28:12 PM",
+      "dateFinished": "Jun 26, 2016 10:28:13 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "def parseFlight(str: String): Flight \u003d {\n    val line \u003d str.split(\",\")\n    Flight(line(0)          , line(1)          , line(2)          , line(3)          , line(4).toInt    ,\n           line(5)          , line(6)          , line(7)          , line(8)          , line(9).toDouble , \n           line(10).toDouble, line(11).toDouble, line(12).toDouble, line(13).toDouble, line(14).toDouble, \n           line(15).toDouble, line(16).toInt)\n}",
-      "dateUpdated": "Jun 25, 2016 8:56:54 PM",
+      "dateUpdated": "Jun 26, 2016 10:28:19 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -173,15 +173,15 @@
         "msg": "parseFlight: (str: String)Flight\n"
       },
       "dateCreated": "Jun 25, 2016 8:06:22 AM",
-      "dateStarted": "Jun 25, 2016 8:56:54 PM",
-      "dateFinished": "Jun 25, 2016 8:56:55 PM",
+      "dateStarted": "Jun 26, 2016 10:28:19 PM",
+      "dateFinished": "Jun 26, 2016 10:28:21 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Try to read all the lines from the CSV file",
       "text": "val linesCnt \u003d sc.accumulator(0L, \"total lines\")\nval flightsRDD \u003d sc.textFile(\"data/rita2014jan.csv\")\n      .flatMap { line \u003d\u003e\n        linesCnt +\u003d 1\n        Try { parseFlight(line) }.toOption\n      }.cache()\nflightsRDD.toDF().registerTempTable(\"flightsRDD\")",
-      "dateUpdated": "Jun 26, 2016 6:59:39 AM",
+      "dateUpdated": "Jun 26, 2016 10:29:26 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -195,7 +195,8 @@
         },
         "enabled": true,
         "title": true,
-        "tableHide": true
+        "tableHide": true,
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -206,18 +207,18 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "linesCnt: org.apache.spark.Accumulator[Long] \u003d 0\nflightsRDD: org.apache.spark.rdd.RDD[Flight] \u003d MapPartitionsRDD[75] at flatMap at \u003cconsole\u003e:55\n"
+        "msg": "linesCnt: org.apache.spark.Accumulator[Long] \u003d 0\nflightsRDD: org.apache.spark.rdd.RDD[Flight] \u003d MapPartitionsRDD[2] at flatMap at \u003cconsole\u003e:46\n"
       },
       "dateCreated": "Jun 25, 2016 8:08:57 AM",
-      "dateStarted": "Jun 26, 2016 6:59:40 AM",
-      "dateFinished": "Jun 26, 2016 6:59:44 AM",
+      "dateStarted": "Jun 26, 2016 10:29:21 PM",
+      "dateFinished": "Jun 26, 2016 10:29:28 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Show the number of useful lines ",
       "text": "// use .count to trigger the computation and tick the counters\nval validCnt \u003d flightsRDD.count()\nval badCnt \u003d linesCnt.value - validCnt\nprintln(s\"$badCnt ${\"%.4f\".format(badCnt / linesCnt.value.toDouble * 100)}% bad lines out of ${linesCnt.value} total.\")",
-      "dateUpdated": "Jun 25, 2016 8:58:59 PM",
+      "dateUpdated": "Jun 26, 2016 10:29:32 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -244,8 +245,8 @@
         "msg": "validCnt: Long \u003d 439620\nbadCnt: Long \u003d 2002\n2002 0.4533% bad lines out of 441622 total.\n"
       },
       "dateCreated": "Jun 25, 2016 8:16:55 AM",
-      "dateStarted": "Jun 25, 2016 8:57:06 PM",
-      "dateFinished": "Jun 25, 2016 8:57:12 PM",
+      "dateStarted": "Jun 26, 2016 10:29:32 PM",
+      "dateFinished": "Jun 26, 2016 10:29:41 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -379,7 +380,7 @@
     {
       "title": "Transform non-numeric data into numeric values",
       "text": "\nval carrierMap: Map[String, Int] \u003d flightsRDD.map(_.carrier).distinct.collect().zipWithIndex.toMap\n\nval originMap: Map[String, Int] \u003d flightsRDD.map(_.origin).distinct.collect.zipWithIndex.toMap\n\nval destMap: Map[String, Int] \u003d flightsRDD.map(_.dest).distinct.collect.zipWithIndex.toMap",
-      "dateUpdated": "Jun 25, 2016 9:01:14 PM",
+      "dateUpdated": "Jun 26, 2016 10:29:46 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -408,14 +409,14 @@
         "msg": "carrierMap: Map[String,Int] \u003d Map(DL -\u003e 5, F9 -\u003e 10, US -\u003e 9, OO -\u003e 2, B6 -\u003e 0, AA -\u003e 6, EV -\u003e 12, FL -\u003e 1, UA -\u003e 4, MQ -\u003e 8, WN -\u003e 13, AS -\u003e 3, VX -\u003e 7, HA -\u003e 11)\noriginMap: Map[String,Int] \u003d Map(ROW -\u003e 23, OAJ -\u003e 144, GCC -\u003e 232, SYR -\u003e 80, TYR -\u003e 162, TUL -\u003e 180, STL -\u003e 203, IDA -\u003e 61, ICT -\u003e 62, MQT -\u003e 37, SWF -\u003e 118, EKO -\u003e 148, JFK -\u003e 216, LGB -\u003e 241, ISP -\u003e 101, ART -\u003e 288, ORD -\u003e 234, STX -\u003e 170, EGE -\u003e 159, LWS -\u003e 132, TWF -\u003e 229, LAS -\u003e 44, BET -\u003e 286, GSP -\u003e 117, DAY -\u003e 123, KOA -\u003e 252, BUR -\u003e 292, DRO -\u003e 276, PVD -\u003e 31, BRD -\u003e 77, SPS -\u003e 1, CLD -\u003e 184, SGF -\u003e 86, CDV -\u003e 222, STT -\u003e 214, OTZ -\u003e 279, AVL -\u003e 199, BOI -\u003e 12, PSP -\u003e 150, SAF -\u003e 40, FWA -\u003e 146, MHT -\u003e 186, SBN -\u003e 206, RDM -\u003e 182, PSG -\u003e 59, LAX -\u003e 294, BQN -\u003e 293, HSV -\u003e 257, RIC -\u003e 6, BTM -\u003e 217, LSE -\u003e 33, FCA -\u003e 55, JAC -\u003e 110, ATL -\u003e 273, CHA -\u003e 112, BQK -\u003e 96, MIA -\u003e 176, GUC -\u003e 282, SBP -\u003e 163, BFL -\u003e 74, DHN -\u003e 51, FLG -\u003e 155, BRO -\u003e 274, LAN -\u003e 192, FSM -\u003e 15, RAP -\u003e...destMap: Map[String,Int] \u003d Map(ROW -\u003e 23, OAJ -\u003e 144, GCC -\u003e 232, SYR -\u003e 80, TYR -\u003e 162, TUL -\u003e 180, STL -\u003e 203, IDA -\u003e 61, ICT -\u003e 62, MQT -\u003e 37, SWF -\u003e 118, EKO -\u003e 148, JFK -\u003e 216, LGB -\u003e 241, ISP -\u003e 101, ART -\u003e 288, ORD -\u003e 234, STX -\u003e 170, EGE -\u003e 159, LWS -\u003e 132, TWF -\u003e 229, LAS -\u003e 44, BET -\u003e 286, GSP -\u003e 117, DAY -\u003e 123, KOA -\u003e 252, BUR -\u003e 292, DRO -\u003e 276, PVD -\u003e 31, BRD -\u003e 77, SPS -\u003e 1, CLD -\u003e 184, SGF -\u003e 86, CDV -\u003e 222, STT -\u003e 214, OTZ -\u003e 279, AVL -\u003e 199, BOI -\u003e 12, PSP -\u003e 150, SAF -\u003e 40, FWA -\u003e 146, MHT -\u003e 186, SBN -\u003e 206, RDM -\u003e 182, PSG -\u003e 59, LAX -\u003e 294, BQN -\u003e 293, HSV -\u003e 257, RIC -\u003e 6, BTM -\u003e 217, LSE -\u003e 33, FCA -\u003e 55, JAC -\u003e 110, ATL -\u003e 273, CHA -\u003e 112, BQK -\u003e 96, MIA -\u003e 176, GUC -\u003e 282, SBP -\u003e 163, BFL -\u003e 74, DHN -\u003e 51, FLG -\u003e 155, BRO -\u003e 274, LAN -\u003e 192, FSM -\u003e 15, RAP -\u003e 2..."
       },
       "dateCreated": "Jun 25, 2016 8:19:01 AM",
-      "dateStarted": "Jun 25, 2016 9:01:14 PM",
-      "dateFinished": "Jun 25, 2016 9:01:17 PM",
+      "dateStarted": "Jun 26, 2016 10:29:46 PM",
+      "dateFinished": "Jun 26, 2016 10:29:52 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "// Define the features array as a LabeledPoint.  Select only relevant features\n\nval mldata \u003d flightsRDD.map { flight \u003d\u003e\n    LabeledPoint(\n      if (flight.depdelaymins \u003e 40) 1.0 else 0.0,\n      Vectors.dense(\n          flight.dofM.toDouble - 1,           // day of month\n          flight.dofW.toDouble - 1,           // day of week\n          flight.crsdeptime,                  // departure time\n          flight.crsarrtime,                  // arrival time\n          carrierMap(flight.carrier).toDouble,// carrier\n          flight.crselapsedtime,              // elapsed flight time\n          originMap(flight.origin).toDouble,  // departure city\n          destMap(flight.dest).toDouble       // arrival city\n      )\n    )\n}.cache()",
-      "dateUpdated": "Jun 25, 2016 8:34:26 AM",
+      "dateUpdated": "Jun 26, 2016 10:29:55 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -439,17 +440,17 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "mldata: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[15] at map at \u003cconsole\u003e:64\n"
+        "msg": "mldata: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[16] at map at \u003cconsole\u003e:55\n"
       },
       "dateCreated": "Jun 25, 2016 8:32:15 AM",
-      "dateStarted": "Jun 25, 2016 8:34:26 AM",
-      "dateFinished": "Jun 25, 2016 8:34:27 AM",
+      "dateStarted": "Jun 26, 2016 10:29:55 PM",
+      "dateFinished": "Jun 26, 2016 10:29:56 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "// Partition the data into training and test data sets\n\n// mldata0 is %85 not delayed flights\nval mldata0 \u003d mldata.filter(x \u003d\u003e x.label \u003d\u003d 0).randomSplit(Array(0.85, 0.15))(1)\n// mldata1 is %100 delayed flights\nval mldata1 \u003d mldata.filter(x \u003d\u003e x.label !\u003d 0)\n// mldata2 is delayed and not delayed\nval mldata2 \u003d mldata0 ++ mldata1\n\n//  split mldata2 into training and test data\nval splits \u003d mldata2.randomSplit(Array(0.7, 0.3))\nval (trainingData, testData) \u003d (splits(0), splits(1))",
-      "dateUpdated": "Jun 25, 2016 8:35:42 AM",
+      "dateUpdated": "Jun 26, 2016 10:30:07 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -473,17 +474,17 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "mldata0: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[18] at randomSplit at \u003cconsole\u003e:67\nmldata1: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[19] at filter at \u003cconsole\u003e:64\nmldata2: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d UnionRDD[20] at $plus$plus at \u003cconsole\u003e:68\nsplits: Array[org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint]] \u003d Array(MapPartitionsRDD[21] at randomSplit at \u003cconsole\u003e:70, MapPartitionsRDD[22] at randomSplit at \u003cconsole\u003e:70)\ntrainingData: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[21] at randomSplit at \u003cconsole\u003e:70\ntestData: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[22] at randomSplit at \u003cconsole\u003e:70\n"
+        "msg": "mldata0: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[19] at randomSplit at \u003cconsole\u003e:58\nmldata1: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[20] at filter at \u003cconsole\u003e:55\nmldata2: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d UnionRDD[21] at $plus$plus at \u003cconsole\u003e:59\nsplits: Array[org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint]] \u003d Array(MapPartitionsRDD[22] at randomSplit at \u003cconsole\u003e:61, MapPartitionsRDD[23] at randomSplit at \u003cconsole\u003e:61)\ntrainingData: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[22] at randomSplit at \u003cconsole\u003e:61\ntestData: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[23] at randomSplit at \u003cconsole\u003e:61\n"
       },
       "dateCreated": "Jun 25, 2016 8:34:26 AM",
-      "dateStarted": "Jun 25, 2016 8:35:42 AM",
-      "dateFinished": "Jun 25, 2016 8:35:44 AM",
+      "dateStarted": "Jun 26, 2016 10:30:07 PM",
+      "dateFinished": "Jun 26, 2016 10:30:09 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "// Define some parameters and train the model.\n\n// airity of non-continuous features\nval categoricalFeaturesInfo \u003d Map(\n      0 -\u003e 31,\n      1 -\u003e 7,\n      4 -\u003e carrierMap.size,\n      6 -\u003e originMap.size,\n      7 -\u003e destMap.size\n)\n\nval numClasses \u003d 2      // 0, 1\nval impurity   \u003d \"gini\" // or \u0027entropy\u0027\nval maxDepth   \u003d 3      // 9  depth of the decision tree\nval maxBins    \u003d 500    // 7000 discretization of continuous features\n\n// call DecisionTree trainClassifier with the trainingData , which returns the model\nval model \u003d DecisionTree.trainClassifier(trainingData, numClasses, categoricalFeaturesInfo, impurity, maxDepth, maxBins)\n\nz.put(\"modelVar\", model.toDebugString)",
-      "dateUpdated": "Jun 26, 2016 7:52:48 AM",
+      "dateUpdated": "Jun 26, 2016 10:30:21 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -510,14 +511,14 @@
         "msg": "categoricalFeaturesInfo: scala.collection.immutable.Map[Int,Int] \u003d Map(0 -\u003e 31, 1 -\u003e 7, 6 -\u003e 301, 7 -\u003e 301, 4 -\u003e 14)\nnumClasses: Int \u003d 2\nimpurity: String \u003d gini\nmaxDepth: Int \u003d 3\nmaxBins: Int \u003d 500\nmodel: org.apache.spark.mllib.tree.model.DecisionTreeModel \u003d DecisionTreeModel classifier of depth 3 with 15 nodes\n"
       },
       "dateCreated": "Jun 25, 2016 8:35:42 AM",
-      "dateStarted": "Jun 26, 2016 7:52:48 AM",
-      "dateFinished": "Jun 26, 2016 7:52:53 AM",
+      "dateStarted": "Jun 26, 2016 10:30:21 PM",
+      "dateFinished": "Jun 26, 2016 10:30:30 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%pyspark\n\nmodelVar \u003d z.get(\"modelVar\")\n\ndef parse(lines):\n\tblock \u003d []\n\twhile lines :\n\t\t\t\n\t\tif lines[0].startswith(\u0027If\u0027):\n\t\t\tbl \u003d \u0027 \u0027.join(lines.pop(0).split()[1:]).replace(\u0027(\u0027, \u0027\u0027).replace(\u0027)\u0027, \u0027\u0027)\n\t\t\tblock.append({\u0027name\u0027:bl, \u0027children\u0027:parse(lines)})\n\t\t\t\t\n\t\t\t\t\n\t\t\tif lines[0].startswith(\u0027Else\u0027):\n\t\t\t\tbe \u003d \u0027 \u0027.join(lines.pop(0).split()[1:]).replace(\u0027(\u0027, \u0027\u0027).replace(\u0027)\u0027, \u0027\u0027)\n\t\t\t\tblock.append({\u0027name\u0027:be, \u0027children\u0027:parse(lines)})\n\t\telif not lines[0].startswith((\u0027If\u0027,\u0027Else\u0027)):\n\t\t\tblock2 \u003d lines.pop(0)\n\t\t\tblock.append({\u0027name\u0027:block2})\n\t\telse:\n\t\t\tbreak\t\n\treturn block\n\t\n# Convert Tree to JSON\ndef tree_json(tree):\n\tdata \u003d []\n\tfor line in tree.splitlines() : \n\t\tif line.strip():\n\t\t\tline \u003d line.strip()\n\t\t\tdata.append(line)\n\t\telse : break\n\t\tif not line : break\n\tres \u003d []\n\tres.append({\u0027name\u0027:\u0027Root\u0027, \u0027children\u0027:parse(data[1:])})\n\t#with open(\u0027data/structure.json\u0027, \u0027w\u0027) as outfile:\n\t#\tjson.dump(res[0], outfile)\n\n\treturn res\n\t\t\nresult \u003d tree_json(modelVar)\n\nprint (\"transformation succesful\")",
-      "dateUpdated": "Jun 26, 2016 7:54:03 AM",
+      "text": "%pyspark\n\nmodelVar \u003d z.get(\"modelVar\")\n\ndef parse(lines):\n\tblock \u003d []\n\twhile lines :\n\t\t\t\n\t\tif lines[0].startswith(\u0027If\u0027):\n\t\t\tbl \u003d \u0027 \u0027.join(lines.pop(0).split()[1:]).replace(\u0027(\u0027, \u0027\u0027).replace(\u0027)\u0027, \u0027\u0027)\n\t\t\tblock.append({\u0027name\u0027:bl, \u0027children\u0027:parse(lines)})\n\t\t\t\t\n\t\t\t\t\n\t\t\tif lines[0].startswith(\u0027Else\u0027):\n\t\t\t\tbe \u003d \u0027 \u0027.join(lines.pop(0).split()[1:]).replace(\u0027(\u0027, \u0027\u0027).replace(\u0027)\u0027, \u0027\u0027)\n\t\t\t\tblock.append({\u0027name\u0027:be, \u0027children\u0027:parse(lines)})\n\t\telif not lines[0].startswith((\u0027If\u0027,\u0027Else\u0027)):\n\t\t\tblock2 \u003d lines.pop(0)\n\t\t\tblock.append({\u0027name\u0027:block2})\n\t\telse:\n\t\t\tbreak\t\n\treturn block\n\t\n# Convert Tree to JSON\ndef tree_json(tree):\n\tdata \u003d []\n\tfor line in tree.splitlines() : \n\t\tif line.strip():\n\t\t\tline \u003d line.strip()\n\t\t\tdata.append(line)\n\t\telse : break\n\t\tif not line : break\n\tres \u003d []\n\tres.append({\u0027name\u0027:\u0027Root\u0027, \u0027children\u0027:parse(data[1:])})\n\t#with open(\u0027data/structure.json\u0027, \u0027w\u0027) as outfile:\n\t#\tjson.dump(res[0], outfile)\n\n\treturn res\n\t\t\nresult \u003d tree_json(modelVar)\n\nprint (\"transformation succesful\")\n\nprint (result)",
+      "dateUpdated": "Jun 26, 2016 10:30:35 PM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -541,11 +542,46 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "transformation succesful\n"
+        "msg": "transformation succesful\n[{\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 4 in {11.0,7.0,10.0,1.0,3.0,0.0,9.0,6.0,4.0,8.0,13.0,2.0,5.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 4 not in {11.0,7.0,10.0,1.0,3.0,0.0,9.0,6.0,4.0,8.0,13.0,2.0,5.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003c\u003d 1146.0\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 0 in {18.0,13.0,24.0,27.0,12.0,19.0,17.0,20.0,14.0,11.0,16.0,25.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {18.0,13.0,24.0,27.0,12.0,19.0,17.0,20.0,14.0,11.0,16.0,25.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003e 1146.0\u0027}], \u0027name\u0027: \u0027feature 0 in {18.0,13.0,12.0,24.0,19.0,17.0,27.0,11.0,14.0,20.0,25.0,16.0,26.0,15.0,21.0,22.0,23.0,10.0,30.0,28.0,8.0}\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 0 in {0.0,9.0,29.0,7.0,6.0,1.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {0.0,9.0,29.0,7.0,6.0,1.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003c\u003d 1000.0\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 4 in {11.0,3.0,7.0,10.0,1.0,9.0,0.0,2.0,6.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 4 not in {11.0,3.0,7.0,10.0,1.0,9.0,0.0,2.0,6.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003e 1000.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {18.0,13.0,12.0,24.0,19.0,17.0,27.0,11.0,14.0,20.0,25.0,16.0,26.0,15.0,21.0,22.0,23.0,10.0,30.0,28.0,8.0}\u0027}], \u0027name\u0027: \u0027Root\u0027}]\n"
       },
       "dateCreated": "Jun 26, 2016 7:37:36 AM",
-      "dateStarted": "Jun 26, 2016 7:52:58 AM",
-      "dateFinished": "Jun 26, 2016 7:52:58 AM",
+      "dateStarted": "Jun 26, 2016 10:30:35 PM",
+      "dateFinished": "Jun 26, 2016 10:30:35 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n\n\u003cdiv id\u003d\"tree\" style\u003d\"height: 800px; width: 100%\"\u003e\u003c/div\u003e\n\n\u003cstyle\u003e\n\n\t.node circle {\n\t  fill: #fff;\n\t  stroke: steelblue;\n\t  stroke-width: 3px;\n\t}\n\n\t.node text { font: 12px sans-serif; }\n\n\t.link {\n\t  fill: none;\n\t  stroke: #ccc;\n\t  stroke-width: 2px;\n\t}\n\t\n\u003c/style\u003e\n\n\u003cscript\u003e\nvar margin \u003d {top: 20, right: 120, bottom: 20, left: 120},\n\twidth  \u003d 800 - margin.right - margin.left,\n\theight \u003d 480 - margin.top - margin.bottom;\n\t\nvar i \u003d 0;\n\nvar tree \u003d d3.layout.tree()\n\t.size([height, width]);\n\nvar diagonal \u003d d3.svg.diagonal()\n\t.projection(function(d) { return [d.y, d.x]; });\n\nvar svg \u003d d3.select(\"tree\").append(\"svg\")\n\t.attr(\"width\", width + margin.right + margin.left)\n\t.attr(\"height\", height + margin.top + margin.bottom)\n  .append(\"g\")\n\t.attr(\"transform\", \"translate(\" + margin.left + \",\" + margin.top + \")\");\n\n// load the external data\nd3.json(${result}, function(error, treeData) {\n  root \u003d treeData[0];\n  update(root);\n});\n\nfunction update(source) {\n\n  // Compute the new tree layout.\n  var nodes \u003d tree.nodes(root).reverse(),\n\t  links \u003d tree.links(nodes);\n\n  // Normalize for fixed-depth.\n  nodes.forEach(function(d) { d.y \u003d d.depth * 180; });\n\n  // Declare the nodes…\n  var node \u003d svg.selectAll(\"g.node\")\n\t  .data(nodes, function(d) { return d.id || (d.id \u003d ++i); });\n\n  // Enter the nodes.\n  var nodeEnter \u003d node.enter().append(\"g\")\n\t  .attr(\"class\", \"node\")\n\t  .attr(\"transform\", function(d) { \n\t\t  return \"translate(\" + d.y + \",\" + d.x + \")\"; });\n\n  nodeEnter.append(\"circle\")\n\t  .attr(\"r\", 10)\n\t  .style(\"fill\", \"#fff\");\n\n  nodeEnter.append(\"text\")\n\t  .attr(\"x\", function(d) { \n\t\t  return d.children || d._children ? -13 : 13; })\n\t  .attr(\"dy\", \".35em\")\n\t  .attr(\"text-anchor\", function(d) { \n\t\t  return d.children || d._children ? \"end\" : \"start\"; })\n\t  .text(function(d) { return d.name; })\n\t  .style(\"fill-opacity\", 1);\n\n  // Declare the links…\n  var link \u003d svg.selectAll(\"path.link\")\n\t  .data(links, function(d) { return d.target.id; });\n\n  // Enter the links.\n  link.enter().insert(\"path\", \"g\")\n\t  .attr(\"class\", \"link\")\n\t  .attr(\"d\", diagonal);\n}\n\n\u003c/script\u003e",
+      "dateUpdated": "Jun 26, 2016 10:31:59 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1466979319288_-1966440322",
+      "id": "20160626-221519_1143282761",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003cdiv id\u003d\"tree\" style\u003d\"height: 800px; width: 100%\"\u003e\u003c/div\u003e\n\n\u003cstyle\u003e\n\n\t.node circle {\n\t  fill: #fff;\n\t  stroke: steelblue;\n\t  stroke-width: 3px;\n\t}\n\n\t.node text { font: 12px sans-serif; }\n\n\t.link {\n\t  fill: none;\n\t  stroke: #ccc;\n\t  stroke-width: 2px;\n\t}\n\t\n\u003c/style\u003e\n\n\u003cscript\u003e\nvar margin \u003d {top: 20, right: 120, bottom: 20, left: 120},\n\twidth  \u003d 800 - margin.right - margin.left,\n\theight \u003d 480 - margin.top - margin.bottom;\n\t\nvar i \u003d 0;\n\nvar tree \u003d d3.layout.tree()\n\t.size([height, width]);\n\nvar diagonal \u003d d3.svg.diagonal()\n\t.projection(function(d) { return [d.y, d.x]; });\n\nvar svg \u003d d3.select(\"tree\").append(\"svg\")\n\t.attr(\"width\", width + margin.right + margin.left)\n\t.attr(\"height\", height + margin.top + margin.bottom)\n  .append(\"g\")\n\t.attr(\"transform\", \"translate(\" + margin.left + \",\" + margin.top + \")\");\n\n// load the external data\nd3.json(${result}, function(error, treeData) {\n  root \u003d treeData[0];\n  update(root);\n});\n\nfunction update(source) {\n\n  // Compute the new tree layout.\n  var nodes \u003d tree.nodes(root).reverse(),\n\t  links \u003d tree.links(nodes);\n\n  // Normalize for fixed-depth.\n  nodes.forEach(function(d) { d.y \u003d d.depth * 180; });\n\n  // Declare the nodes…\n  var node \u003d svg.selectAll(\"g.node\")\n\t  .data(nodes, function(d) { return d.id || (d.id \u003d ++i); });\n\n  // Enter the nodes.\n  var nodeEnter \u003d node.enter().append(\"g\")\n\t  .attr(\"class\", \"node\")\n\t  .attr(\"transform\", function(d) { \n\t\t  return \"translate(\" + d.y + \",\" + d.x + \")\"; });\n\n  nodeEnter.append(\"circle\")\n\t  .attr(\"r\", 10)\n\t  .style(\"fill\", \"#fff\");\n\n  nodeEnter.append(\"text\")\n\t  .attr(\"x\", function(d) { \n\t\t  return d.children || d._children ? -13 : 13; })\n\t  .attr(\"dy\", \".35em\")\n\t  .attr(\"text-anchor\", function(d) { \n\t\t  return d.children || d._children ? \"end\" : \"start\"; })\n\t  .text(function(d) { return d.name; })\n\t  .style(\"fill-opacity\", 1);\n\n  // Declare the links…\n  var link \u003d svg.selectAll(\"path.link\")\n\t  .data(links, function(d) { return d.target.id; });\n\n  // Enter the links.\n  link.enter().insert(\"path\", \"g\")\n\t  .attr(\"class\", \"link\")\n\t  .attr(\"d\", diagonal);\n}\n\n\u003c/script\u003e"
+      },
+      "dateCreated": "Jun 26, 2016 10:15:19 PM",
+      "dateStarted": "Jun 26, 2016 10:31:59 PM",
+      "dateFinished": "Jun 26, 2016 10:31:59 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
