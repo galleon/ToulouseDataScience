@@ -72,7 +72,7 @@
     {
       "title": "Let\u0027s import what is needed to solve our problem",
       "text": "%spark\nimport scala.util.Try\n\nimport org.apache.spark._\nimport org.apache.spark.rdd.RDD\nimport org.apache.spark.mllib.regression.LabeledPoint\nimport org.apache.spark.mllib.linalg.Vectors\nimport org.apache.spark.mllib.tree.DecisionTree\nimport org.apache.spark.mllib.tree.model.DecisionTreeModel\nimport org.apache.spark.mllib.util.MLUtils\n",
-      "dateUpdated": "Jun 26, 2016 10:29:15 PM",
+      "dateUpdated": "Jun 27, 2016 3:01:38 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -102,15 +102,15 @@
         "msg": "import scala.util.Try\nimport org.apache.spark._\nimport org.apache.spark.rdd.RDD\nimport org.apache.spark.mllib.regression.LabeledPoint\nimport org.apache.spark.mllib.linalg.Vectors\nimport org.apache.spark.mllib.tree.DecisionTree\nimport org.apache.spark.mllib.tree.model.DecisionTreeModel\nimport org.apache.spark.mllib.util.MLUtils\n"
       },
       "dateCreated": "Jun 25, 2016 7:16:35 AM",
-      "dateStarted": "Jun 26, 2016 10:29:15 PM",
-      "dateFinished": "Jun 26, 2016 10:29:18 PM",
+      "dateStarted": "Jun 27, 2016 3:01:39 PM",
+      "dateFinished": "Jun 27, 2016 3:02:11 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Define the Flight class",
       "text": "// define the Flight Schema\ncase class Flight(dofM: String, dofW: String, carrier: String, tailnum: String, flnum: Int, org_id: String,\n                      origin: String, dest_id: String, dest: String, crsdeptime: Double, deptime: Double, depdelaymins: Double,\n                      crsarrtime: Double, arrtime: Double, arrdelay: Double, crselapsedtime: Double, dist: Int)",
-      "dateUpdated": "Jun 26, 2016 10:28:12 PM",
+      "dateUpdated": "Jun 27, 2016 3:01:46 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -140,14 +140,14 @@
         "msg": "defined class Flight\n"
       },
       "dateCreated": "Jun 25, 2016 8:05:05 AM",
-      "dateStarted": "Jun 26, 2016 10:28:12 PM",
-      "dateFinished": "Jun 26, 2016 10:28:13 PM",
+      "dateStarted": "Jun 27, 2016 3:01:46 PM",
+      "dateFinished": "Jun 27, 2016 3:02:13 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "def parseFlight(str: String): Flight \u003d {\n    val line \u003d str.split(\",\")\n    Flight(line(0)          , line(1)          , line(2)          , line(3)          , line(4).toInt    ,\n           line(5)          , line(6)          , line(7)          , line(8)          , line(9).toDouble , \n           line(10).toDouble, line(11).toDouble, line(12).toDouble, line(13).toDouble, line(14).toDouble, \n           line(15).toDouble, line(16).toInt)\n}",
-      "dateUpdated": "Jun 26, 2016 10:28:19 PM",
+      "dateUpdated": "Jun 27, 2016 3:02:15 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -173,15 +173,15 @@
         "msg": "parseFlight: (str: String)Flight\n"
       },
       "dateCreated": "Jun 25, 2016 8:06:22 AM",
-      "dateStarted": "Jun 26, 2016 10:28:19 PM",
-      "dateFinished": "Jun 26, 2016 10:28:21 PM",
+      "dateStarted": "Jun 27, 2016 3:02:16 PM",
+      "dateFinished": "Jun 27, 2016 3:02:17 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Try to read all the lines from the CSV file",
       "text": "val linesCnt \u003d sc.accumulator(0L, \"total lines\")\nval flightsRDD \u003d sc.textFile(\"data/rita2014jan.csv\")\n      .flatMap { line \u003d\u003e\n        linesCnt +\u003d 1\n        Try { parseFlight(line) }.toOption\n      }.cache()\nflightsRDD.toDF().registerTempTable(\"flightsRDD\")",
-      "dateUpdated": "Jun 26, 2016 10:29:26 PM",
+      "dateUpdated": "Jun 27, 2016 3:02:23 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -210,15 +210,15 @@
         "msg": "linesCnt: org.apache.spark.Accumulator[Long] \u003d 0\nflightsRDD: org.apache.spark.rdd.RDD[Flight] \u003d MapPartitionsRDD[2] at flatMap at \u003cconsole\u003e:46\n"
       },
       "dateCreated": "Jun 25, 2016 8:08:57 AM",
-      "dateStarted": "Jun 26, 2016 10:29:21 PM",
-      "dateFinished": "Jun 26, 2016 10:29:28 PM",
+      "dateStarted": "Jun 27, 2016 3:02:23 PM",
+      "dateFinished": "Jun 27, 2016 3:02:30 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Show the number of useful lines ",
       "text": "// use .count to trigger the computation and tick the counters\nval validCnt \u003d flightsRDD.count()\nval badCnt \u003d linesCnt.value - validCnt\nprintln(s\"$badCnt ${\"%.4f\".format(badCnt / linesCnt.value.toDouble * 100)}% bad lines out of ${linesCnt.value} total.\")",
-      "dateUpdated": "Jun 26, 2016 10:29:32 PM",
+      "dateUpdated": "Jun 27, 2016 3:02:27 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -245,14 +245,128 @@
         "msg": "validCnt: Long \u003d 439620\nbadCnt: Long \u003d 2002\n2002 0.4533% bad lines out of 441622 total.\n"
       },
       "dateCreated": "Jun 25, 2016 8:16:55 AM",
-      "dateStarted": "Jun 26, 2016 10:29:32 PM",
-      "dateFinished": "Jun 26, 2016 10:29:41 PM",
+      "dateStarted": "Jun 27, 2016 3:02:28 PM",
+      "dateFinished": "Jun 27, 2016 3:02:38 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%sql\n\nselect dofW, case when depdelaymins \u003e 15 then  \u0027delayed\u0027 else \u0027ok\u0027 end, count(1)\nfrom flightsRDD\ngroup by dofW, case when depdelaymins \u003e 15 then  \u0027delayed\u0027 else \u0027ok\u0027 end\n",
-      "dateUpdated": "Jun 26, 2016 7:02:04 AM",
+      "text": "%sql\nselect carrier, AVG(arrdelay) averagedelay from flightsRDD group by carrier order by averagedelay desc limit 10",
+      "dateUpdated": "Jun 27, 2016 3:02:57 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "carrier",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "averagedelay",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "yAxis": {
+              "name": "averagedelay",
+              "index": 1.0,
+              "aggr": "sum"
+            },
+            "xAxis": {
+              "name": "carrier",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1467019866716_-908010375",
+      "id": "20160627-093106_391117015",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "carrier\taveragedelay\nB6\t30.97907157965045\nF9\t25.745351514078273\nEV\t25.55346905702421\nMQ\t24.12837725565784\nWN\t21.617142263950726\nDL\t19.939279073093978\nUA\t17.293985143868493\nFL\t16.427529626253417\nOO\t14.392240110975662\nAA\t13.417675184736108\n"
+      },
+      "dateCreated": "Jun 27, 2016 9:31:06 AM",
+      "dateStarted": "Jun 27, 2016 3:02:57 PM",
+      "dateFinished": "Jun 27, 2016 3:03:00 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect dest, AVG(arrdelay) averagedelay from flightsRDD group by dest order by averagedelay desc limit 10",
+      "dateUpdated": "Jun 27, 2016 3:03:03 PM",
+      "config": {
+        "colWidth": 6.0,
+        "graph": {
+          "mode": "multiBarChart",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [
+            {
+              "name": "dest",
+              "index": 0.0,
+              "aggr": "sum"
+            }
+          ],
+          "values": [
+            {
+              "name": "averagedelay",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          ],
+          "groups": [],
+          "scatter": {
+            "xAxis": {
+              "name": "dest",
+              "index": 0.0,
+              "aggr": "sum"
+            },
+            "yAxis": {
+              "name": "averagedelay",
+              "index": 1.0,
+              "aggr": "sum"
+            }
+          }
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1467020518357_1140125680",
+      "id": "20160627-094158_488339942",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TABLE",
+        "msg": "dest\taveragedelay\nAZO\t108.8\nMQT\t76.28\nILG\t72.65454545454546\nSUX\t54.297872340425535\nCMI\t51.751724137931035\nCWA\t50.73255813953488\nALO\t47.282051282051285\nFOE\t47.26190476190476\nART\t45.15151515151515\nTTN\t44.6910569105691\n"
+      },
+      "dateCreated": "Jun 27, 2016 9:41:58 AM",
+      "dateStarted": "Jun 27, 2016 3:03:03 PM",
+      "dateFinished": "Jun 27, 2016 3:03:07 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect dofW, case when depdelaymins \u003e 15 then  \u0027delayed\u0027 else \u0027ok\u0027 end, count(1)\nfrom flightsRDD\ngroup by dofW, case when depdelaymins \u003e 15 then  \u0027delayed\u0027 else \u0027ok\u0027 end\n",
+      "dateUpdated": "Jun 27, 2016 3:03:19 PM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -308,14 +422,14 @@
         "msg": "dofW\t_c1\t_c2\n4\tdelayed\t22115\n4\tok\t53727\n5\tdelayed\t21321\n5\tok\t54537\n6\tdelayed\t13449\n1\tdelayed\t13639\n6\tok\t35345\n7\tdelayed\t13156\n1\tok\t45995\n2\tdelayed\t11730\n7\tok\t42980\n2\tok\t41132\n3\tdelayed\t18112\n3\tok\t52382\n"
       },
       "dateCreated": "Jun 25, 2016 8:59:11 PM",
-      "dateStarted": "Jun 26, 2016 6:59:51 AM",
-      "dateFinished": "Jun 26, 2016 7:00:05 AM",
+      "dateStarted": "Jun 27, 2016 3:03:19 PM",
+      "dateFinished": "Jun 27, 2016 3:03:23 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%sql \n\nselect cast(cast(crsdeptime as int)/100 as int) as hour, case when depdelaymins \u003e 15 then  \u0027delayed\u0027 else \u0027ok\u0027 end as delay, count(1) as count from flightsRDD\ngroup by cast(cast(crsdeptime as int)/100 as int), case when depdelaymins \u003e 15 then  \u0027delayed\u0027 else \u0027ok\u0027 end",
-      "dateUpdated": "Jun 26, 2016 7:22:37 AM",
+      "text": "%sql \nselect cast(cast(crsdeptime as int)/100 as int) as hour, case when depdelaymins \u003e 15 then  \u0027delayed\u0027 else \u0027ok\u0027 end as delay, count(1) as count from flightsRDD\ngroup by cast(cast(crsdeptime as int)/100 as int), case when depdelaymins \u003e 15 then  \u0027delayed\u0027 else \u0027ok\u0027 end",
+      "dateUpdated": "Jun 27, 2016 3:03:40 PM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -372,15 +486,15 @@
         "msg": "hour\tdelay\tcount\n18\tdelayed\t8871\n12\tok\t20645\n2\tdelayed\t17\n23\tok\t1742\n13\tdelayed\t8438\n7\tok\t26280\n18\tok\t16055\n8\tdelayed\t5097\n2\tok\t59\n19\tdelayed\t9055\n13\tok\t20972\n3\tdelayed\t3\n14\tdelayed\t8786\n8\tok\t27140\n19\tok\t15987\n9\tdelayed\t5196\n3\tok\t2\n20\tdelayed\t6176\n14\tok\t19582\n4\tdelayed\t15\n15\tdelayed\t8553\n9\tok\t21969\n20\tok\t10787\n10\tdelayed\t6545\n4\tok\t52\n21\tdelayed\t3756\n15\tok\t18840\n5\tdelayed\t481\n16\tdelayed\t9117\n10\tok\t22081\n0\tdelayed\t82\n21\tok\t7284\n11\tdelayed\t7343\n5\tok\t4299\n22\tdelayed\t1228\n16\tok\t18078\n6\tdelayed\t2597\n0\tok\t527\n17\tdelayed\t10546\n11\tok\t22352\n1\tdelayed\t29\n22\tok\t4410\n12\tdelayed\t7576\n6\tok\t24927\n23\tdelayed\t490\n17\tok\t21838\n7\tdelayed\t3525\n1\tok\t190\n"
       },
       "dateCreated": "Jun 26, 2016 7:02:24 AM",
-      "dateStarted": "Jun 26, 2016 7:21:05 AM",
-      "dateFinished": "Jun 26, 2016 7:21:07 AM",
+      "dateStarted": "Jun 27, 2016 3:03:40 PM",
+      "dateFinished": "Jun 27, 2016 3:03:43 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "title": "Transform non-numeric data into numeric values",
       "text": "\nval carrierMap: Map[String, Int] \u003d flightsRDD.map(_.carrier).distinct.collect().zipWithIndex.toMap\n\nval originMap: Map[String, Int] \u003d flightsRDD.map(_.origin).distinct.collect.zipWithIndex.toMap\n\nval destMap: Map[String, Int] \u003d flightsRDD.map(_.dest).distinct.collect.zipWithIndex.toMap",
-      "dateUpdated": "Jun 26, 2016 10:29:46 PM",
+      "dateUpdated": "Jun 27, 2016 3:03:49 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -409,14 +523,14 @@
         "msg": "carrierMap: Map[String,Int] \u003d Map(DL -\u003e 5, F9 -\u003e 10, US -\u003e 9, OO -\u003e 2, B6 -\u003e 0, AA -\u003e 6, EV -\u003e 12, FL -\u003e 1, UA -\u003e 4, MQ -\u003e 8, WN -\u003e 13, AS -\u003e 3, VX -\u003e 7, HA -\u003e 11)\noriginMap: Map[String,Int] \u003d Map(ROW -\u003e 23, OAJ -\u003e 144, GCC -\u003e 232, SYR -\u003e 80, TYR -\u003e 162, TUL -\u003e 180, STL -\u003e 203, IDA -\u003e 61, ICT -\u003e 62, MQT -\u003e 37, SWF -\u003e 118, EKO -\u003e 148, JFK -\u003e 216, LGB -\u003e 241, ISP -\u003e 101, ART -\u003e 288, ORD -\u003e 234, STX -\u003e 170, EGE -\u003e 159, LWS -\u003e 132, TWF -\u003e 229, LAS -\u003e 44, BET -\u003e 286, GSP -\u003e 117, DAY -\u003e 123, KOA -\u003e 252, BUR -\u003e 292, DRO -\u003e 276, PVD -\u003e 31, BRD -\u003e 77, SPS -\u003e 1, CLD -\u003e 184, SGF -\u003e 86, CDV -\u003e 222, STT -\u003e 214, OTZ -\u003e 279, AVL -\u003e 199, BOI -\u003e 12, PSP -\u003e 150, SAF -\u003e 40, FWA -\u003e 146, MHT -\u003e 186, SBN -\u003e 206, RDM -\u003e 182, PSG -\u003e 59, LAX -\u003e 294, BQN -\u003e 293, HSV -\u003e 257, RIC -\u003e 6, BTM -\u003e 217, LSE -\u003e 33, FCA -\u003e 55, JAC -\u003e 110, ATL -\u003e 273, CHA -\u003e 112, BQK -\u003e 96, MIA -\u003e 176, GUC -\u003e 282, SBP -\u003e 163, BFL -\u003e 74, DHN -\u003e 51, FLG -\u003e 155, BRO -\u003e 274, LAN -\u003e 192, FSM -\u003e 15, RAP -\u003e...destMap: Map[String,Int] \u003d Map(ROW -\u003e 23, OAJ -\u003e 144, GCC -\u003e 232, SYR -\u003e 80, TYR -\u003e 162, TUL -\u003e 180, STL -\u003e 203, IDA -\u003e 61, ICT -\u003e 62, MQT -\u003e 37, SWF -\u003e 118, EKO -\u003e 148, JFK -\u003e 216, LGB -\u003e 241, ISP -\u003e 101, ART -\u003e 288, ORD -\u003e 234, STX -\u003e 170, EGE -\u003e 159, LWS -\u003e 132, TWF -\u003e 229, LAS -\u003e 44, BET -\u003e 286, GSP -\u003e 117, DAY -\u003e 123, KOA -\u003e 252, BUR -\u003e 292, DRO -\u003e 276, PVD -\u003e 31, BRD -\u003e 77, SPS -\u003e 1, CLD -\u003e 184, SGF -\u003e 86, CDV -\u003e 222, STT -\u003e 214, OTZ -\u003e 279, AVL -\u003e 199, BOI -\u003e 12, PSP -\u003e 150, SAF -\u003e 40, FWA -\u003e 146, MHT -\u003e 186, SBN -\u003e 206, RDM -\u003e 182, PSG -\u003e 59, LAX -\u003e 294, BQN -\u003e 293, HSV -\u003e 257, RIC -\u003e 6, BTM -\u003e 217, LSE -\u003e 33, FCA -\u003e 55, JAC -\u003e 110, ATL -\u003e 273, CHA -\u003e 112, BQK -\u003e 96, MIA -\u003e 176, GUC -\u003e 282, SBP -\u003e 163, BFL -\u003e 74, DHN -\u003e 51, FLG -\u003e 155, BRO -\u003e 274, LAN -\u003e 192, FSM -\u003e 15, RAP -\u003e 2..."
       },
       "dateCreated": "Jun 25, 2016 8:19:01 AM",
-      "dateStarted": "Jun 26, 2016 10:29:46 PM",
-      "dateFinished": "Jun 26, 2016 10:29:52 PM",
+      "dateStarted": "Jun 27, 2016 3:03:49 PM",
+      "dateFinished": "Jun 27, 2016 3:03:53 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "// Define the features array as a LabeledPoint.  Select only relevant features\n\nval mldata \u003d flightsRDD.map { flight \u003d\u003e\n    LabeledPoint(\n      if (flight.depdelaymins \u003e 40) 1.0 else 0.0,\n      Vectors.dense(\n          flight.dofM.toDouble - 1,           // day of month\n          flight.dofW.toDouble - 1,           // day of week\n          flight.crsdeptime,                  // departure time\n          flight.crsarrtime,                  // arrival time\n          carrierMap(flight.carrier).toDouble,// carrier\n          flight.crselapsedtime,              // elapsed flight time\n          originMap(flight.origin).toDouble,  // departure city\n          destMap(flight.dest).toDouble       // arrival city\n      )\n    )\n}.cache()",
-      "dateUpdated": "Jun 26, 2016 10:29:55 PM",
+      "dateUpdated": "Jun 27, 2016 3:03:55 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -440,17 +554,17 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "mldata: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[16] at map at \u003cconsole\u003e:55\n"
+        "msg": "mldata: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[54] at map at \u003cconsole\u003e:55\n"
       },
       "dateCreated": "Jun 25, 2016 8:32:15 AM",
-      "dateStarted": "Jun 26, 2016 10:29:55 PM",
-      "dateFinished": "Jun 26, 2016 10:29:56 PM",
+      "dateStarted": "Jun 27, 2016 3:03:55 PM",
+      "dateFinished": "Jun 27, 2016 3:03:56 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "// Partition the data into training and test data sets\n\n// mldata0 is %85 not delayed flights\nval mldata0 \u003d mldata.filter(x \u003d\u003e x.label \u003d\u003d 0).randomSplit(Array(0.85, 0.15))(1)\n// mldata1 is %100 delayed flights\nval mldata1 \u003d mldata.filter(x \u003d\u003e x.label !\u003d 0)\n// mldata2 is delayed and not delayed\nval mldata2 \u003d mldata0 ++ mldata1\n\n//  split mldata2 into training and test data\nval splits \u003d mldata2.randomSplit(Array(0.7, 0.3))\nval (trainingData, testData) \u003d (splits(0), splits(1))",
-      "dateUpdated": "Jun 26, 2016 10:30:07 PM",
+      "dateUpdated": "Jun 27, 2016 3:03:59 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -474,17 +588,17 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "mldata0: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[19] at randomSplit at \u003cconsole\u003e:58\nmldata1: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[20] at filter at \u003cconsole\u003e:55\nmldata2: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d UnionRDD[21] at $plus$plus at \u003cconsole\u003e:59\nsplits: Array[org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint]] \u003d Array(MapPartitionsRDD[22] at randomSplit at \u003cconsole\u003e:61, MapPartitionsRDD[23] at randomSplit at \u003cconsole\u003e:61)\ntrainingData: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[22] at randomSplit at \u003cconsole\u003e:61\ntestData: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[23] at randomSplit at \u003cconsole\u003e:61\n"
+        "msg": "mldata0: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[57] at randomSplit at \u003cconsole\u003e:58\nmldata1: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[58] at filter at \u003cconsole\u003e:55\nmldata2: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d UnionRDD[59] at $plus$plus at \u003cconsole\u003e:59\nsplits: Array[org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint]] \u003d Array(MapPartitionsRDD[60] at randomSplit at \u003cconsole\u003e:61, MapPartitionsRDD[61] at randomSplit at \u003cconsole\u003e:61)\ntrainingData: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[60] at randomSplit at \u003cconsole\u003e:61\ntestData: org.apache.spark.rdd.RDD[org.apache.spark.mllib.regression.LabeledPoint] \u003d MapPartitionsRDD[61] at randomSplit at \u003cconsole\u003e:61\n"
       },
       "dateCreated": "Jun 25, 2016 8:34:26 AM",
-      "dateStarted": "Jun 26, 2016 10:30:07 PM",
-      "dateFinished": "Jun 26, 2016 10:30:09 PM",
+      "dateStarted": "Jun 27, 2016 3:04:00 PM",
+      "dateFinished": "Jun 27, 2016 3:04:02 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "// Define some parameters and train the model.\n\n// airity of non-continuous features\nval categoricalFeaturesInfo \u003d Map(\n      0 -\u003e 31,\n      1 -\u003e 7,\n      4 -\u003e carrierMap.size,\n      6 -\u003e originMap.size,\n      7 -\u003e destMap.size\n)\n\nval numClasses \u003d 2      // 0, 1\nval impurity   \u003d \"gini\" // or \u0027entropy\u0027\nval maxDepth   \u003d 3      // 9  depth of the decision tree\nval maxBins    \u003d 500    // 7000 discretization of continuous features\n\n// call DecisionTree trainClassifier with the trainingData , which returns the model\nval model \u003d DecisionTree.trainClassifier(trainingData, numClasses, categoricalFeaturesInfo, impurity, maxDepth, maxBins)\n\nz.put(\"modelVar\", model.toDebugString)",
-      "dateUpdated": "Jun 26, 2016 10:30:21 PM",
+      "dateUpdated": "Jun 27, 2016 3:04:06 PM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -511,14 +625,14 @@
         "msg": "categoricalFeaturesInfo: scala.collection.immutable.Map[Int,Int] \u003d Map(0 -\u003e 31, 1 -\u003e 7, 6 -\u003e 301, 7 -\u003e 301, 4 -\u003e 14)\nnumClasses: Int \u003d 2\nimpurity: String \u003d gini\nmaxDepth: Int \u003d 3\nmaxBins: Int \u003d 500\nmodel: org.apache.spark.mllib.tree.model.DecisionTreeModel \u003d DecisionTreeModel classifier of depth 3 with 15 nodes\n"
       },
       "dateCreated": "Jun 25, 2016 8:35:42 AM",
-      "dateStarted": "Jun 26, 2016 10:30:21 PM",
-      "dateFinished": "Jun 26, 2016 10:30:30 PM",
+      "dateStarted": "Jun 27, 2016 3:04:06 PM",
+      "dateFinished": "Jun 27, 2016 3:04:16 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "%pyspark\n\nmodelVar \u003d z.get(\"modelVar\")\n\ndef parse(lines):\n\tblock \u003d []\n\twhile lines :\n\t\t\t\n\t\tif lines[0].startswith(\u0027If\u0027):\n\t\t\tbl \u003d \u0027 \u0027.join(lines.pop(0).split()[1:]).replace(\u0027(\u0027, \u0027\u0027).replace(\u0027)\u0027, \u0027\u0027)\n\t\t\tblock.append({\u0027name\u0027:bl, \u0027children\u0027:parse(lines)})\n\t\t\t\t\n\t\t\t\t\n\t\t\tif lines[0].startswith(\u0027Else\u0027):\n\t\t\t\tbe \u003d \u0027 \u0027.join(lines.pop(0).split()[1:]).replace(\u0027(\u0027, \u0027\u0027).replace(\u0027)\u0027, \u0027\u0027)\n\t\t\t\tblock.append({\u0027name\u0027:be, \u0027children\u0027:parse(lines)})\n\t\telif not lines[0].startswith((\u0027If\u0027,\u0027Else\u0027)):\n\t\t\tblock2 \u003d lines.pop(0)\n\t\t\tblock.append({\u0027name\u0027:block2})\n\t\telse:\n\t\t\tbreak\t\n\treturn block\n\t\n# Convert Tree to JSON\ndef tree_json(tree):\n\tdata \u003d []\n\tfor line in tree.splitlines() : \n\t\tif line.strip():\n\t\t\tline \u003d line.strip()\n\t\t\tdata.append(line)\n\t\telse : break\n\t\tif not line : break\n\tres \u003d []\n\tres.append({\u0027name\u0027:\u0027Root\u0027, \u0027children\u0027:parse(data[1:])})\n\t#with open(\u0027data/structure.json\u0027, \u0027w\u0027) as outfile:\n\t#\tjson.dump(res[0], outfile)\n\n\treturn res\n\t\t\nresult \u003d tree_json(modelVar)\n\nprint (\"transformation succesful\")\n\nprint (result)",
-      "dateUpdated": "Jun 26, 2016 10:30:35 PM",
+      "dateUpdated": "Jun 28, 2016 5:15:08 AM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -531,7 +645,8 @@
           "scatter": {}
         },
         "enabled": true,
-        "editorMode": "ace/mode/scala"
+        "editorMode": "ace/mode/scala",
+        "editorHide": false
       },
       "settings": {
         "params": {},
@@ -542,17 +657,17 @@
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "transformation succesful\n[{\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 4 in {11.0,7.0,10.0,1.0,3.0,0.0,9.0,6.0,4.0,8.0,13.0,2.0,5.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 4 not in {11.0,7.0,10.0,1.0,3.0,0.0,9.0,6.0,4.0,8.0,13.0,2.0,5.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003c\u003d 1146.0\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 0 in {18.0,13.0,24.0,27.0,12.0,19.0,17.0,20.0,14.0,11.0,16.0,25.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {18.0,13.0,24.0,27.0,12.0,19.0,17.0,20.0,14.0,11.0,16.0,25.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003e 1146.0\u0027}], \u0027name\u0027: \u0027feature 0 in {18.0,13.0,12.0,24.0,19.0,17.0,27.0,11.0,14.0,20.0,25.0,16.0,26.0,15.0,21.0,22.0,23.0,10.0,30.0,28.0,8.0}\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 0 in {0.0,9.0,29.0,7.0,6.0,1.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {0.0,9.0,29.0,7.0,6.0,1.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003c\u003d 1000.0\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 4 in {11.0,3.0,7.0,10.0,1.0,9.0,0.0,2.0,6.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 4 not in {11.0,3.0,7.0,10.0,1.0,9.0,0.0,2.0,6.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003e 1000.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {18.0,13.0,12.0,24.0,19.0,17.0,27.0,11.0,14.0,20.0,25.0,16.0,26.0,15.0,21.0,22.0,23.0,10.0,30.0,28.0,8.0}\u0027}], \u0027name\u0027: \u0027Root\u0027}]\n"
+        "msg": "transformation succesful\n[{\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 2 \u003c\u003d 1319.0\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 2 \u003e 1319.0\u0027}], \u0027name\u0027: \u0027feature 4 in {11.0,7.0,1.0,3.0,10.0,9.0,0.0,6.0,4.0,8.0,2.0,5.0,13.0}\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 0 in {18.0,17.0,13.0,11.0,20.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {18.0,17.0,13.0,11.0,20.0}\u0027}], \u0027name\u0027: \u0027feature 4 not in {11.0,7.0,1.0,3.0,10.0,9.0,0.0,6.0,4.0,8.0,2.0,5.0,13.0}\u0027}], \u0027name\u0027: \u0027feature 0 in {18.0,13.0,19.0,12.0,24.0,17.0,27.0,11.0,14.0,20.0,16.0,25.0,26.0,15.0,21.0,22.0,23.0,30.0}\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 0.0\u0027}], \u0027name\u0027: \u0027feature 0 in {0.0,9.0,8.0,10.0,29.0,28.0,7.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {0.0,9.0,8.0,10.0,29.0,28.0,7.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003c\u003d 1005.0\u0027}, {\u0027children\u0027: [{\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 0 in {10.0,28.0,8.0,9.0,29.0,0.0,7.0}\u0027}, {\u0027children\u0027: [{\u0027name\u0027: \u0027Predict: 1.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {10.0,28.0,8.0,9.0,29.0,0.0,7.0}\u0027}], \u0027name\u0027: \u0027feature 2 \u003e 1005.0\u0027}], \u0027name\u0027: \u0027feature 0 not in {18.0,13.0,19.0,12.0,24.0,17.0,27.0,11.0,14.0,20.0,16.0,25.0,26.0,15.0,21.0,22.0,23.0,30.0}\u0027}], \u0027name\u0027: \u0027Root\u0027}]\n"
       },
       "dateCreated": "Jun 26, 2016 7:37:36 AM",
-      "dateStarted": "Jun 26, 2016 10:30:35 PM",
-      "dateFinished": "Jun 26, 2016 10:30:35 PM",
+      "dateStarted": "Jun 27, 2016 3:04:18 PM",
+      "dateFinished": "Jun 27, 2016 3:04:19 PM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
-      "text": "%angular\n\n\u003cdiv id\u003d\"tree\" style\u003d\"height: 800px; width: 100%\"\u003e\u003c/div\u003e\n\n\u003cstyle\u003e\n\n\t.node circle {\n\t  fill: #fff;\n\t  stroke: steelblue;\n\t  stroke-width: 3px;\n\t}\n\n\t.node text { font: 12px sans-serif; }\n\n\t.link {\n\t  fill: none;\n\t  stroke: #ccc;\n\t  stroke-width: 2px;\n\t}\n\t\n\u003c/style\u003e\n\n\u003cscript\u003e\nvar margin \u003d {top: 20, right: 120, bottom: 20, left: 120},\n\twidth  \u003d 800 - margin.right - margin.left,\n\theight \u003d 480 - margin.top - margin.bottom;\n\t\nvar i \u003d 0;\n\nvar tree \u003d d3.layout.tree()\n\t.size([height, width]);\n\nvar diagonal \u003d d3.svg.diagonal()\n\t.projection(function(d) { return [d.y, d.x]; });\n\nvar svg \u003d d3.select(\"tree\").append(\"svg\")\n\t.attr(\"width\", width + margin.right + margin.left)\n\t.attr(\"height\", height + margin.top + margin.bottom)\n  .append(\"g\")\n\t.attr(\"transform\", \"translate(\" + margin.left + \",\" + margin.top + \")\");\n\n// load the external data\nd3.json(${result}, function(error, treeData) {\n  root \u003d treeData[0];\n  update(root);\n});\n\nfunction update(source) {\n\n  // Compute the new tree layout.\n  var nodes \u003d tree.nodes(root).reverse(),\n\t  links \u003d tree.links(nodes);\n\n  // Normalize for fixed-depth.\n  nodes.forEach(function(d) { d.y \u003d d.depth * 180; });\n\n  // Declare the nodes…\n  var node \u003d svg.selectAll(\"g.node\")\n\t  .data(nodes, function(d) { return d.id || (d.id \u003d ++i); });\n\n  // Enter the nodes.\n  var nodeEnter \u003d node.enter().append(\"g\")\n\t  .attr(\"class\", \"node\")\n\t  .attr(\"transform\", function(d) { \n\t\t  return \"translate(\" + d.y + \",\" + d.x + \")\"; });\n\n  nodeEnter.append(\"circle\")\n\t  .attr(\"r\", 10)\n\t  .style(\"fill\", \"#fff\");\n\n  nodeEnter.append(\"text\")\n\t  .attr(\"x\", function(d) { \n\t\t  return d.children || d._children ? -13 : 13; })\n\t  .attr(\"dy\", \".35em\")\n\t  .attr(\"text-anchor\", function(d) { \n\t\t  return d.children || d._children ? \"end\" : \"start\"; })\n\t  .text(function(d) { return d.name; })\n\t  .style(\"fill-opacity\", 1);\n\n  // Declare the links…\n  var link \u003d svg.selectAll(\"path.link\")\n\t  .data(links, function(d) { return d.target.id; });\n\n  // Enter the links.\n  link.enter().insert(\"path\", \"g\")\n\t  .attr(\"class\", \"link\")\n\t  .attr(\"d\", diagonal);\n}\n\n\u003c/script\u003e",
-      "dateUpdated": "Jun 26, 2016 10:31:59 PM",
+      "text": "%angular\n\n\u003cdiv id\u003d\"tree\" style\u003d\"height: 800px; width: 100%\"\u003e\u003c/div\u003e\n\n\u003cstyle\u003e\n.node circle {\n  fill: #fff;\n  stroke: steelblue;\n  stroke-width: 3px;\n}\n\n.node text { font: 12px sans-serif; }\n\n.link {\n  fill: none;\n  stroke: #ccc;\n  stroke-width: 2px;\n}\n\u003c/style\u003e\n\n\u003cscript\u003e\nvar margin \u003d {top: 20, right: 120, bottom: 20, left: 120},\n\twidth  \u003d 800 - margin.right - margin.left,\n\theight \u003d 480 - margin.top - margin.bottom;\n\t\nvar i \u003d 0;\n\nvar tree \u003d d3.layout.tree()\n\t.size([height, width]);\n\nvar diagonal \u003d d3.svg.diagonal()\n\t.projection(function(d) { return [d.y, d.x]; });\n\nvar svg \u003d d3.select(\"tree\").append(\"svg\")\n\t.attr(\"width\", width + margin.right + margin.left)\n\t.attr(\"height\", height + margin.top + margin.bottom)\n  .append(\"g\")\n\t.attr(\"transform\", \"translate(\" + margin.left + \",\" + margin.top + \")\");\n\n// load the external data\nd3.json(${result}, function(error, treeData) {\n  root \u003d treeData[0];\n  update(root);\n});\n\nfunction update(source) {\n\n  // Compute the new tree layout.\n  var nodes \u003d tree.nodes(root).reverse(),\n\t  links \u003d tree.links(nodes);\n\n  // Normalize for fixed-depth.\n  nodes.forEach(function(d) { d.y \u003d d.depth * 180; });\n\n  // Declare the nodes…\n  var node \u003d svg.selectAll(\"g.node\")\n\t  .data(nodes, function(d) { return d.id || (d.id \u003d ++i); });\n\n  // Enter the nodes.\n  var nodeEnter \u003d node.enter().append(\"g\")\n\t  .attr(\"class\", \"node\")\n\t  .attr(\"transform\", function(d) { \n\t\t  return \"translate(\" + d.y + \",\" + d.x + \")\"; });\n\n  nodeEnter.append(\"circle\")\n\t  .attr(\"r\", 10)\n\t  .style(\"fill\", \"#fff\");\n\n  nodeEnter.append(\"text\")\n\t  .attr(\"x\", function(d) { \n\t\t  return d.children || d._children ? -13 : 13; })\n\t  .attr(\"dy\", \".35em\")\n\t  .attr(\"text-anchor\", function(d) { \n\t\t  return d.children || d._children ? \"end\" : \"start\"; })\n\t  .text(function(d) { return d.name; })\n\t  .style(\"fill-opacity\", 1);\n\n  // Declare the links…\n  var link \u003d svg.selectAll(\"path.link\")\n\t  .data(links, function(d) { return d.target.id; });\n\n  // Enter the links.\n  link.enter().insert(\"path\", \"g\")\n\t  .attr(\"class\", \"link\")\n\t  .attr(\"d\", diagonal);\n}\n\n\u003c/script\u003e",
+      "dateUpdated": "Jun 27, 2016 9:46:55 AM",
       "config": {
         "colWidth": 6.0,
         "graph": {
@@ -577,17 +692,53 @@
       "result": {
         "code": "SUCCESS",
         "type": "ANGULAR",
-        "msg": "\u003cdiv id\u003d\"tree\" style\u003d\"height: 800px; width: 100%\"\u003e\u003c/div\u003e\n\n\u003cstyle\u003e\n\n\t.node circle {\n\t  fill: #fff;\n\t  stroke: steelblue;\n\t  stroke-width: 3px;\n\t}\n\n\t.node text { font: 12px sans-serif; }\n\n\t.link {\n\t  fill: none;\n\t  stroke: #ccc;\n\t  stroke-width: 2px;\n\t}\n\t\n\u003c/style\u003e\n\n\u003cscript\u003e\nvar margin \u003d {top: 20, right: 120, bottom: 20, left: 120},\n\twidth  \u003d 800 - margin.right - margin.left,\n\theight \u003d 480 - margin.top - margin.bottom;\n\t\nvar i \u003d 0;\n\nvar tree \u003d d3.layout.tree()\n\t.size([height, width]);\n\nvar diagonal \u003d d3.svg.diagonal()\n\t.projection(function(d) { return [d.y, d.x]; });\n\nvar svg \u003d d3.select(\"tree\").append(\"svg\")\n\t.attr(\"width\", width + margin.right + margin.left)\n\t.attr(\"height\", height + margin.top + margin.bottom)\n  .append(\"g\")\n\t.attr(\"transform\", \"translate(\" + margin.left + \",\" + margin.top + \")\");\n\n// load the external data\nd3.json(${result}, function(error, treeData) {\n  root \u003d treeData[0];\n  update(root);\n});\n\nfunction update(source) {\n\n  // Compute the new tree layout.\n  var nodes \u003d tree.nodes(root).reverse(),\n\t  links \u003d tree.links(nodes);\n\n  // Normalize for fixed-depth.\n  nodes.forEach(function(d) { d.y \u003d d.depth * 180; });\n\n  // Declare the nodes…\n  var node \u003d svg.selectAll(\"g.node\")\n\t  .data(nodes, function(d) { return d.id || (d.id \u003d ++i); });\n\n  // Enter the nodes.\n  var nodeEnter \u003d node.enter().append(\"g\")\n\t  .attr(\"class\", \"node\")\n\t  .attr(\"transform\", function(d) { \n\t\t  return \"translate(\" + d.y + \",\" + d.x + \")\"; });\n\n  nodeEnter.append(\"circle\")\n\t  .attr(\"r\", 10)\n\t  .style(\"fill\", \"#fff\");\n\n  nodeEnter.append(\"text\")\n\t  .attr(\"x\", function(d) { \n\t\t  return d.children || d._children ? -13 : 13; })\n\t  .attr(\"dy\", \".35em\")\n\t  .attr(\"text-anchor\", function(d) { \n\t\t  return d.children || d._children ? \"end\" : \"start\"; })\n\t  .text(function(d) { return d.name; })\n\t  .style(\"fill-opacity\", 1);\n\n  // Declare the links…\n  var link \u003d svg.selectAll(\"path.link\")\n\t  .data(links, function(d) { return d.target.id; });\n\n  // Enter the links.\n  link.enter().insert(\"path\", \"g\")\n\t  .attr(\"class\", \"link\")\n\t  .attr(\"d\", diagonal);\n}\n\n\u003c/script\u003e"
+        "msg": "\u003cdiv id\u003d\"tree\" style\u003d\"height: 800px; width: 100%\"\u003e\u003c/div\u003e\n\n\u003cstyle\u003e\n.node circle {\n  fill: #fff;\n  stroke: steelblue;\n  stroke-width: 3px;\n}\n\n.node text { font: 12px sans-serif; }\n\n.link {\n  fill: none;\n  stroke: #ccc;\n  stroke-width: 2px;\n}\n\u003c/style\u003e\n\n\u003cscript\u003e\nvar margin \u003d {top: 20, right: 120, bottom: 20, left: 120},\n\twidth  \u003d 800 - margin.right - margin.left,\n\theight \u003d 480 - margin.top - margin.bottom;\n\t\nvar i \u003d 0;\n\nvar tree \u003d d3.layout.tree()\n\t.size([height, width]);\n\nvar diagonal \u003d d3.svg.diagonal()\n\t.projection(function(d) { return [d.y, d.x]; });\n\nvar svg \u003d d3.select(\"tree\").append(\"svg\")\n\t.attr(\"width\", width + margin.right + margin.left)\n\t.attr(\"height\", height + margin.top + margin.bottom)\n  .append(\"g\")\n\t.attr(\"transform\", \"translate(\" + margin.left + \",\" + margin.top + \")\");\n\n// load the external data\nd3.json(${result}, function(error, treeData) {\n  root \u003d treeData[0];\n  update(root);\n});\n\nfunction update(source) {\n\n  // Compute the new tree layout.\n  var nodes \u003d tree.nodes(root).reverse(),\n\t  links \u003d tree.links(nodes);\n\n  // Normalize for fixed-depth.\n  nodes.forEach(function(d) { d.y \u003d d.depth * 180; });\n\n  // Declare the nodes…\n  var node \u003d svg.selectAll(\"g.node\")\n\t  .data(nodes, function(d) { return d.id || (d.id \u003d ++i); });\n\n  // Enter the nodes.\n  var nodeEnter \u003d node.enter().append(\"g\")\n\t  .attr(\"class\", \"node\")\n\t  .attr(\"transform\", function(d) { \n\t\t  return \"translate(\" + d.y + \",\" + d.x + \")\"; });\n\n  nodeEnter.append(\"circle\")\n\t  .attr(\"r\", 10)\n\t  .style(\"fill\", \"#fff\");\n\n  nodeEnter.append(\"text\")\n\t  .attr(\"x\", function(d) { \n\t\t  return d.children || d._children ? -13 : 13; })\n\t  .attr(\"dy\", \".35em\")\n\t  .attr(\"text-anchor\", function(d) { \n\t\t  return d.children || d._children ? \"end\" : \"start\"; })\n\t  .text(function(d) { return d.name; })\n\t  .style(\"fill-opacity\", 1);\n\n  // Declare the links…\n  var link \u003d svg.selectAll(\"path.link\")\n\t  .data(links, function(d) { return d.target.id; });\n\n  // Enter the links.\n  link.enter().insert(\"path\", \"g\")\n\t  .attr(\"class\", \"link\")\n\t  .attr(\"d\", diagonal);\n}\n\n\u003c/script\u003e"
       },
       "dateCreated": "Jun 26, 2016 10:15:19 PM",
-      "dateStarted": "Jun 26, 2016 10:31:59 PM",
-      "dateFinished": "Jun 26, 2016 10:31:59 PM",
+      "dateStarted": "Jun 27, 2016 9:46:55 AM",
+      "dateFinished": "Jun 27, 2016 9:46:57 AM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
     {
       "text": "\n// Evaluate model on test instances and compute test error\n\nval obsCnt \u003d sc.accumulator(0.0, \"observation count\")\nval wrongPred \u003d testData.filter { point \u003d\u003e\n      obsCnt +\u003d 1\n      point.label !\u003d model.predict(point.features)\n}.count()\n\nval ratioWrong \u003d wrongPred / obsCnt.value\nprintln(s\"The model is wrong ${\"%.4f\".format(ratioWrong * 100)}% of the time.\")",
-      "dateUpdated": "Jun 25, 2016 9:06:25 AM",
+      "dateUpdated": "Jun 27, 2016 3:42:57 PM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "editorHide": false,
+        "tableHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1466845533972_334037545",
+      "id": "20160625-090533_1925982507",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "obsCnt: org.apache.spark.Accumulator[Double] \u003d 0.0\nwrongPred: Long \u003d 11553\nratioWrong: Double \u003d 0.32989720159908625\nThe model is wrong 32.9897% of the time.\n"
+      },
+      "dateCreated": "Jun 25, 2016 9:05:33 AM",
+      "dateStarted": "Jun 27, 2016 3:04:30 PM",
+      "dateFinished": "Jun 27, 2016 3:04:32 PM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "// define the Flight Schema\ncase class Airport(iata: String, lat: Double, lon: Double)\n\ndef parseAirport(str: String): Airport \u003d {\n    val line \u003d str.split(\",\")\n    Airport(line(6)         , line(1).toDouble , line(2).toDouble)\n}\n\nval airportsRDD \u003d sc.textFile(\"data/airports3.csv\")\n      .flatMap { line \u003d\u003e\n        Try { parseAirport(line) }.toOption\n      }.cache()\nairportsRDD.toDF().registerTempTable(\"airportsRDD\")\n\n\nprintln(s\"Number of airports with a IATA code: ${\"%d\".format(airportsRDD.count())}\")",
+      "dateUpdated": "Jun 28, 2016 4:54:45 AM",
       "config": {
         "colWidth": 12.0,
         "graph": {
@@ -606,16 +757,86 @@
         "params": {},
         "forms": {}
       },
-      "jobName": "paragraph_1466845533972_334037545",
-      "id": "20160625-090533_1925982507",
+      "jobName": "paragraph_1467042183919_-16026143",
+      "id": "20160627-154303_2128784223",
       "result": {
         "code": "SUCCESS",
         "type": "TEXT",
-        "msg": "obsCnt: org.apache.spark.Accumulator[Double] \u003d 0.0\nwrongPred: Long \u003d 11807\nratioWrong: Double \u003d 0.33896018143714296\nThe model is wrong 33.8960% of the time.\n"
+        "msg": "defined class Airport\nparseAirport: (str: String)Airport\nairportsRDD: org.apache.spark.rdd.RDD[Airport] \u003d MapPartitionsRDD[115] at flatMap at \u003cconsole\u003e:44\nNumber of airports with a IATA code: 8221\n"
       },
-      "dateCreated": "Jun 25, 2016 9:05:33 AM",
-      "dateStarted": "Jun 25, 2016 9:06:25 AM",
-      "dateFinished": "Jun 25, 2016 9:06:27 AM",
+      "dateCreated": "Jun 27, 2016 3:43:03 PM",
+      "dateStarted": "Jun 28, 2016 4:52:31 AM",
+      "dateFinished": "Jun 28, 2016 4:52:33 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val flightsDF \u003d flightsRDD.toDF()\nval airportsDF \u003d airportsRDD.toDF()\n\nval joinDF \u003d flightsDF.groupBy(flightsDF(\"dest\")).agg(avg(flightsDF(\"arrdelay\"))).withColumnRenamed(\"avg(arrdelay)\", \"avgarrdelay\").join(airportsDF, flightsDF(\"dest\") \u003d\u003d\u003d airportsDF(\"iata\")).drop(flightsDF(\"dest\"))\n\n//joinDF.registerTempTable(\"joinDF\")\n\njoinDF.printSchema()\n\nz.put(\"locations\", joinDF.collect())",
+      "dateUpdated": "Jun 28, 2016 9:48:43 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1467089532667_1294696674",
+      "id": "20160628-045212_123243918",
+      "result": {
+        "code": "SUCCESS",
+        "type": "TEXT",
+        "msg": "flightsDF: org.apache.spark.sql.DataFrame \u003d [dofM: string, dofW: string, carrier: string, tailnum: string, flnum: int, org_id: string, origin: string, dest_id: string, dest: string, crsdeptime: double, deptime: double, depdelaymins: double, crsarrtime: double, arrtime: double, arrdelay: double, crselapsedtime: double, dist: int]\nairportsDF: org.apache.spark.sql.DataFrame \u003d [iata: string, lat: double, lon: double]\njoinDF: org.apache.spark.sql.DataFrame \u003d [avgarrdelay: double, iata: string, lat: double, lon: double]\nroot\n |-- avgarrdelay: double (nullable \u003d true)\n |-- iata: string (nullable \u003d true)\n |-- lat: double (nullable \u003d false)\n |-- lon: double (nullable \u003d false)\n\n"
+      },
+      "dateCreated": "Jun 28, 2016 4:52:12 AM",
+      "dateStarted": "Jun 28, 2016 5:46:06 AM",
+      "dateFinished": "Jun 28, 2016 5:46:10 AM",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%angular\n\n\u003clink rel\u003d\"stylesheet\" href\u003d\"https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css\" /\u003e\n\u003cdiv id\u003d\"map\" style\u003d\"height: 800px; width: 100%\"\u003e\u003c/div\u003e\n\n\u003cscript type\u003d\"text/javascript\"\u003e\nfunction initMap() {\n    var map \u003d L.map(\u0027map\u0027).setView([37.09, -95.71], 5);\n\n    L.tileLayer(\u0027http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\u0027, {\n        zoomControl:false,\n        attribution: \u0027Map data \u0026copy; \u003ca href\u003d\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e contributors\u0027,\n        maxZoom: 12,\n        minZoom: 2\n    }).addTo(map);\n\n    var geoMarkers \u003d L.layerGroup().addTo(map);\n    \n    var el \u003d angular.element($(\u0027#map\u0027).parent(\u0027.ng-scope\u0027));\n    angular.element(el).ready(function() {\n        window.locationWatcher \u003d el.scope().compiledScope.$watch(\u0027locations\u0027, function(newValue, oldValue) {\n            // geoMarkers.clearLayers(); -- if you want to only show new data clear the layer first\n            angular.forEach(newValue, function(airport) {\n                var marker \u003d L.marker([ airport.lat, airport.lon ])\n                  .bindPopup(\"avg delay: \" + airport.avgarrdelay)\n                  .addTo(geoMarkers);\n            });\n        })\n    });\n}\n\nif (window.locationWatcher) {\n    // clear existing watcher otherwise we\u0027ll have duplicates\n    window.locationWatcher();\n}\n\n// ensure we only load the script once, seems to cause issues otherwise\nif (window.L) {\n    initMap();\n} else {\n    console.log(\u0027Loading Leaflet library\u0027);\n    var sc \u003d document.createElement(\u0027script\u0027);\n    sc.type \u003d \u0027text/javascript\u0027;\n    sc.src \u003d \u0027https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js\u0027;\n    sc.onload \u003d initMap;\n    sc.onerror \u003d function(err) { alert(err); }\n    document.getElementsByTagName(\u0027head\u0027)[0].appendChild(sc);\n}\n\u003c/script\u003e",
+      "dateUpdated": "Jun 28, 2016 5:45:04 AM",
+      "config": {
+        "colWidth": 12.0,
+        "graph": {
+          "mode": "table",
+          "height": 300.0,
+          "optionOpen": false,
+          "keys": [],
+          "values": [],
+          "groups": [],
+          "scatter": {}
+        },
+        "enabled": true,
+        "editorMode": "ace/mode/scala",
+        "tableHide": false,
+        "editorHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "jobName": "paragraph_1466845585438_1845239279",
+      "id": "20160625-090625_970974537",
+      "result": {
+        "code": "SUCCESS",
+        "type": "ANGULAR",
+        "msg": "\u003clink rel\u003d\"stylesheet\" href\u003d\"https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css\" /\u003e\n\u003cdiv id\u003d\"map\" style\u003d\"height: 800px; width: 100%\"\u003e\u003c/div\u003e\n\n\u003cscript type\u003d\"text/javascript\"\u003e\nfunction initMap() {\n    var map \u003d L.map(\u0027map\u0027).setView([37.09, -95.71], 5);\n\n    L.tileLayer(\u0027http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png\u0027, {\n        zoomControl:false,\n        attribution: \u0027Map data \u0026copy; \u003ca href\u003d\"http://openstreetmap.org\"\u003eOpenStreetMap\u003c/a\u003e contributors\u0027,\n        maxZoom: 12,\n        minZoom: 2\n    }).addTo(map);\n\n    var geoMarkers \u003d L.layerGroup().addTo(map);\n    \n    var el \u003d angular.element($(\u0027#map\u0027).parent(\u0027.ng-scope\u0027));\n    angular.element(el).ready(function() {\n        window.locationWatcher \u003d el.scope().compiledScope.$watch(\u0027locations\u0027, function(newValue, oldValue) {\n            // geoMarkers.clearLayers(); -- if you want to only show new data clear the layer first\n            angular.forEach(newValue, function(airport) {\n                var marker \u003d L.marker([ airport.lat, airport.lon ])\n                  .bindPopup(\"avg delay: \" + airport.avgarrdelay)\n                  .addTo(geoMarkers);\n            });\n        })\n    });\n}\n\nif (window.locationWatcher) {\n    // clear existing watcher otherwise we\u0027ll have duplicates\n    window.locationWatcher();\n}\n\n// ensure we only load the script once, seems to cause issues otherwise\nif (window.L) {\n    initMap();\n} else {\n    console.log(\u0027Loading Leaflet library\u0027);\n    var sc \u003d document.createElement(\u0027script\u0027);\n    sc.type \u003d \u0027text/javascript\u0027;\n    sc.src \u003d \u0027https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js\u0027;\n    sc.onload \u003d initMap;\n    sc.onerror \u003d function(err) { alert(err); }\n    document.getElementsByTagName(\u0027head\u0027)[0].appendChild(sc);\n}\n\u003c/script\u003e"
+      },
+      "dateCreated": "Jun 25, 2016 9:06:25 AM",
+      "dateStarted": "Jun 28, 2016 5:45:04 AM",
+      "dateFinished": "Jun 28, 2016 5:45:04 AM",
       "status": "FINISHED",
       "progressUpdateIntervalMs": 500
     },
@@ -625,9 +846,9 @@
         "params": {},
         "forms": {}
       },
-      "jobName": "paragraph_1466845585438_1845239279",
-      "id": "20160625-090625_970974537",
-      "dateCreated": "Jun 25, 2016 9:06:25 AM",
+      "jobName": "paragraph_1467039897275_1065221723",
+      "id": "20160627-150457_468027597",
+      "dateCreated": "Jun 27, 2016 3:04:57 PM",
       "status": "READY",
       "progressUpdateIntervalMs": 500
     }
